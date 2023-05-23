@@ -40,6 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
+    # 'dj_rest_auth.registration'
     'drf_yasg',
     'rest_framework',
     'rest_framework.authtoken',
@@ -48,7 +54,7 @@ INSTALLED_APPS = [
     'django_filters',
     # 'My app'
     'users',
-    'blog_post'
+    'blog_post',
 ]
 
 MIDDLEWARE = [
@@ -139,6 +145,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     )
 }
 
@@ -150,6 +157,7 @@ SIMPLE_JWT = {
 
 REST_AUTH = {
     'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'jwt-auth',
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

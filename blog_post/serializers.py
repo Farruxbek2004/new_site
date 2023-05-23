@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import BlogPostModel, Comment
+from .models import BlogPostModel, Comment, LikeDislike
 from django.contrib.auth.models import User
 
 
@@ -9,7 +9,7 @@ class PostListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BlogPostModel
-        fields = ['id', 'title', 'description', 'owner', 'comments']
+        fields = ['id', 'title', 'description', 'owner', 'comments', 'likes', 'dislikes']
 
 
 class PostCreateSerializer(serializers.ModelSerializer):
@@ -26,10 +26,18 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'description', 'owner', 'post']
-#
-#
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['id', 'username', 'post']
 
+
+class LikeDislikeSerializer(serializers.Serializer):
+    type = serializers.ChoiceField(choices=LikeDislike.LikeDislikeType.choices)
+
+    class Mete:
+        model = LikeDislike
+        fields = ["id", "post", "user", "type"]
+
+    #
+    #
+    # class UserSerializer(serializers.ModelSerializer):
+    #     class Meta:
+    #         model = User
+    #         fields = ['id', 'username', 'post']

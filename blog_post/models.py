@@ -7,7 +7,6 @@ class BlogPostModel(models.Model):
     """
     Blogpost Model
     """
-
     title = models.CharField(max_length=200, null=True, blank=True)
     slug = models.SlugField(unique=True)
     description = models.TextField()
@@ -27,47 +26,36 @@ class BlogPostModel(models.Model):
         self.slug = slug
         return super().save(*args, **kwargs)
 
+    @property
+    def likes(self):
+        return self.like_dislike.filter(type=LikeDislike.LikeDislikeType.LIKE).count()
+
+    @property
+    def dislikes(self):
+        return self.like_dislike.filter(type=LikeDislike.LikeDislikeType.DISLIKE).count()
+
 
 class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     body = models.TextField(blank=False)
     owner = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='comments')
     post = models.ForeignKey('BlogPostModel', on_delete=models.CASCADE, related_name='comments')
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='replies')
-
+    parent = models.ForeignKey("self", on_delete=models.CASCADE, related_name="replies", null=True)
     class Meta:
         ordering = ['created_at']
-# class CourseContent(AbstractUser):
-#     title = models.CharField(max_length=200)
-#     description = models.TextField()
-#     video = models.FileField(upload_to='media/', validators=[FileExtensionValidator(allowed_extensions=['mp4'])])
-#     time = models.TimeField(auto_now_add=True)
-#     position = models.IntegerField()
-#     is_public = models.BooleanField()
-#     course_id = models.ForeignKey(on_delete=models.CASCADE, related_name='course_content')
-#
-#     def __str__(self):
-#         return self.title
-# class Rate(models.Choices):
-#     CHOICE_ONE = 1
-#     CHOICE_TWO = 2
-#     CHOICE_THREE = 3
-#     CHOICE_FOUR = 4
-#     CHOICE_FIVE = 5
-# class Review(models.Model):
-#     user = models.ForeignKey(
-#         "users.User",
-#         on_delete=models.CASCADE,
-#         related_name="user"
-#     )
-#     course = models.ForeignKey(
-#         Course,
-#         on_delete=models.CASCADE,
-#         related_name="course"
-#     )
-#     rate = models.PositiveIntegerField(max_length=20, choices=Rate.choices)
-#     comment = models.CharField(max_length=400)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#
-#     def __str__(self):
-#         return str(self.user)
+
+
+class LikeDislike(models.Model):
+    class LikeDislikeType(models.IntegerChoices):
+        LIKE = 1
+        DISLIKE = -1
+
+    post = models.ForeignKey("BlogPostModel", on_delete=models.CASCADE, related_name="like_dislike")
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE, related_name="like_dislike")
+    type = models.SmallIntegerField(choices=LikeDislikeType.choices)
+
+    class Mete:
+        unique_together = ["post", "user"]
+
+    def __str__(self):
+        return str(self.user)
