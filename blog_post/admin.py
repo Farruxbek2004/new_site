@@ -7,5 +7,9 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ["created_at", "body", "owner", "post"]
 
 
+@admin.register(LikeDislike)
+class LikeDislikeAdmin(admin.ModelAdmin):
+    list_display = ['post', 'user']
+
+
 admin.site.register(BlogPostModel)
-admin.site.register(LikeDislike)

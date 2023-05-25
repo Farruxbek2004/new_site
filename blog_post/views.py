@@ -55,14 +55,14 @@ class LikeDislikeView(APIView):
         serializer.is_valid(raise_exception=True)
         user = request.user
         type_ = serializer.validated_data.get("type")
-        blog = BlogPostModel.objects.filter(slug=self.kwargs.get("slug")).first()
-        if not blog:
+        post = BlogPostModel.objects.filter(id=self.kwargs.get("pk")).first()
+        if not post:
             raise Http404
-        like_dislike_blog = LikeDislike.objects.filter(blog=blog, user=user).first()
+        like_dislike_blog = LikeDislike.objects.filter(post=post, user=user).first()
         if like_dislike_blog and like_dislike_blog.type == type_:
             like_dislike_blog.delete()
         else:
-            LikeDislike.objects.update_or_create(blog=blog, user=user, defaults={"type": type_})
+            LikeDislike.objects.update_or_create(post=post, user=user, defaults={"type": type_})
 
         return Response({"type": type_, "detail": "Liked or disliked."})
 #

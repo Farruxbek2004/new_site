@@ -17,7 +17,8 @@ class PostCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BlogPostModel
-        fields = ["id", "title", "slug", 'description']
+        fields = ["title", "slug", 'description']
+        read_only_fields = ('id',)
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -25,7 +26,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'description', 'owner', 'post']
+        fields = ['description', 'owner', 'post']
+        read_only_fields = ('id',)
 
 
 class LikeDislikeSerializer(serializers.Serializer):
