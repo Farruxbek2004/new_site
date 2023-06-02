@@ -65,13 +65,4 @@ class LikeDislikeView(APIView):
             LikeDislike.objects.update_or_create(post=post, user=user, defaults={"type": type_})
 
         return Response({"type": type_, "detail": "Liked or disliked."})
-#
-#
-# class UserList(generics.ListAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-#
-#
-# class UserDetail(generics.RetrieveAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
+
